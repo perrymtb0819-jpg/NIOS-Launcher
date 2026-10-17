@@ -13,13 +13,10 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-disabled: true # Schaltet den zickigen Cache-Server komplett ab!
-
-      - name: Build with Gradle
-        run: gradle assembleDebug --stacktrace
+      - name: Force Build Without GitHub Cache
+        run: |
+          sudo apt-get update && sudo apt-get install -y gradle
+          gradle assembleDebug --no-build-cache --stacktrace
         working-directory: PremiumLauncher
 
       - name: Upload APK Artifact
@@ -27,4 +24,4 @@ jobs:
         with:
           name: Neos-Launcher-v1.0
           path: PremiumLauncher/app/build/outputs/apk/debug/app-debug.apk
-
+          
