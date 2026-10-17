@@ -13,15 +13,16 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Force Build Without GitHub Cache
-        run: |
-          sudo apt-get update && sudo apt-get install -y gradle
-          gradle assembleDebug --no-build-cache --stacktrace
-        working-directory: PremiumLauncher
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
+      - name: Setup Gradle Without Network Cache
+        uses: gradle/actions/setup-gradle@v3
         with:
-          name: Neos-Launcher-v1.0
-          path: PremiumLauncher/app/build/outputs/apk/debug/app-debug.apk
+          cache-disabled: true
+          cache-read-only: false
+          cache-overwrite-existing: false
+
+      - name: Build Android App Bundle / APK
+        run: gradle assembleDebug --no-build-cache --stacktrace --warning-mode all
+        working-directory: PremiumLauncher
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
