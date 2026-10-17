@@ -15,9 +15,11 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-disabled: true # Schaltet den zickigen Cache-Server komplett ab!
 
       - name: Build with Gradle
-        run: gradle assembleDebug
+        run: gradle assembleDebug --stacktrace
         working-directory: PremiumLauncher
 
       - name: Upload APK Artifact
@@ -25,3 +27,4 @@ jobs:
         with:
           name: Neos-Launcher-v1.0
           path: PremiumLauncher/app/build/outputs/apk/debug/app-debug.apk
+
